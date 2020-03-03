@@ -23,7 +23,7 @@ plan common_code::tools::available_language
   notice($ruby_check)
 
   $results = {
-    'ruby' => $ruby_check.filter | $rt | { if $rt.ok {$rt.target} },
+    'ruby' => $ruby_check.map | $rt | { if $rt.ok {$rt.target} },
     'perl' => $perl_check.ok,
     'python' => $python_check.ok,
   }
