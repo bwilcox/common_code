@@ -18,6 +18,14 @@ plan common_code::tools::hosts_update
 )
 {
 
+  # Determine what languages are on which hosts
+  out::message('Determining languages available on the servers')
+  $lang = run_plan('common_code::tools::available_language',
+    'server_list' => $server_list
+  )
+  notice($lang)
+
+
   # Manage name resolution via /etc/hosts
   out::message('Updating host file name resolution.')
   $server_list.each |$server| {
@@ -32,15 +40,15 @@ plan common_code::tools::hosts_update
     notice($lang)
 
     # Use the right tool for the right job
-    if $lang.member('ruby') {
-      notice('Found Ruby')
+    #if $lang.member('ruby') {
+    #  notice('Found Ruby')
       run_task('common_code::ruby_update_hosts',
         $server_list,
         'ip'   => $ip,
         'fqdn' => $server,
       )
-    } else {
-      notice('Did not find ruby')
-    }
+    #} else {
+    #  notice('Did not find ruby')
+    #}
   }
 }

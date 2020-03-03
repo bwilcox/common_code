@@ -13,12 +13,14 @@
 
 plan common_code::tools::available_language
 (
-  STRING[1] $server,
+  ARRAY[STRING[1]] $server_list,
 )
 {
-  $ruby_check = run_command('/bin/which ruby', $server, '_catch_errors' => true)
-  $perl_check = run_command('/bin/which perl', $server, '_catch_errors' => true)
-  $python_check = run_command('/bin/which python', $server, '_catch_errors' => true)
+  $ruby_check = run_command('/bin/which ruby', $server_list, '_catch_errors' => true)
+  $perl_check = run_command('/bin/which perl', $server_list, '_catch_errors' => true)
+  $python_check = run_command('/bin/which python', $server_list, '_catch_errors' => true)
+
+  notice($ruby_check)
 
   $results = {
     'ruby' => $ruby_check.ok,
