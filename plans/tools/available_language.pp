@@ -24,17 +24,15 @@ plan common_code::tools::available_language
 
   $results = {
     'ruby' => $ruby_check.map | $rt | { if $rt.ok {$rt.target} },
-    'perl' => $perl_check.ok,
-    'python' => $python_check.ok,
+    'perl' => $perl_check.map | $pt | { if $pt.ok {$pt.target} },
+    'python' => $python_check.map | $pyt | { if $pyt.ok {$pyt.target} },
   }
 
   notice($results)
 
-  $lang = $results.filter |$k,$v| { $v }
-
-  notice("Installed languages: ${lang.keys}")
+  notice("Installed languages: ${results}")
 
   # Return an array of languages available on the target host.
-  return $lang.keys
+  return $results
 
 }
