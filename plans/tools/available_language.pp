@@ -23,17 +23,14 @@ plan common_code::tools::available_language
   notice($ruby_check)
 
   $results = {
-    'ruby' => $ruby_check.map | $rt | { if $rt.ok {"${rt.target}"} },
-    'perl' => $perl_check.map | $pt | { if $pt.ok {"${pt.target}"} },
-    'python' => $python_check.map | $pyt | { if $pyt.ok {"${pyt.target}"} },
+    'ruby' => delete_undef_values($ruby_check.map | $rt | { if $rt.ok {"${rt.target}"} }),
+    'perl' => delete_undef_values($perl_check.map | $pt | { if $pt.ok {"${pt.target}"} }),
+    'python' => delete_undef_values($python_check.map | $pyt | { if $pyt.ok {"${pyt.target}"} }),
   }
 
-  # take out any undef values
-  $filtered_results = delete_undef_values($results)
-
-  notice("Installed languages: ${filtered_results}")
+  notice("Installed languages: ${results}")
 
   # Return an hash of languages available on the target hosts.
-  return $filtered_results
+  return $results
 
 }
