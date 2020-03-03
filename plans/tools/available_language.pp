@@ -29,7 +29,7 @@ plan common_code::tools::available_language
   }
 
   # take out any undef values
-  $filtered_results = $results.filter | $k, $v | { $v.each | $m | { if defined($m) { $m }}}
+  $filtered_results = $results.filter | $k, $v | { $v.each | $m | { unless empty($m) { $m }}}
 
   notice("Installed languages: ${filtered_results}")
 
