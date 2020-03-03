@@ -23,9 +23,9 @@ plan common_code::tools::available_language
   notice($ruby_check)
 
   $results = {
-    'ruby' => $ruby_check.map | $rt | { if $rt.ok {$rt.target} },
-    'perl' => $perl_check.map | $pt | { if $pt.ok {$pt.target} },
-    'python' => $python_check.map | $pyt | { if $pyt.ok {$pyt.target} },
+    'ruby' => $ruby_check.map | $rt | { if $rt.ok {"${rt.target}"} },
+    'perl' => $perl_check.map | $pt | { if $pt.ok {"${pt.target}"} },
+    'python' => $python_check.map | $pyt | { if $pyt.ok {"${pyt.target}"} },
   }
 
   # take out any undef values
