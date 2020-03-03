@@ -1,0 +1,15 @@
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "description": "Update the local hosts file with the IP of the server.",
+  "parameters": {
+    "ip": {
+      "description": "The IP to set.",
+      "type": "String"
+    },
+    "fqdn": {
+      "description": "The FQDN for the IP.",
+      "type": "String"
+    }
+  }
+}
