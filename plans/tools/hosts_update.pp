@@ -23,8 +23,6 @@ plan common_code::tools::hosts_update
   $lang = run_plan('common_code::tools::available_language',
     'server_list' => $server_list
   )
-  notice($lang)
-
 
   # Manage name resolution via /etc/hosts
   out::message('Updating host file name resolution.')

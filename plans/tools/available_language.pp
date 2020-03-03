@@ -28,11 +28,12 @@ plan common_code::tools::available_language
     'python' => $python_check.map | $pyt | { if $pyt.ok {$pyt.target} },
   }
 
-  notice($results)
+  # take out any undef values
+  $filtered_results = $results.filter | $k, $v | { $v.each | $m | {$m}}
 
-  notice("Installed languages: ${results}")
+  notice("Installed languages: ${filtered_results}")
 
   # Return an hash of languages available on the target hosts.
-  return $results
+  return $filtered_results
 
 }
