@@ -1,36 +1,44 @@
+#!/usr/bin/env ruby
+#
 # @summary
-#   This plan is used to add local hosts file entries to all of the 
-#   servers in the list.  This is a stop-gap in case DNS resolution
-#   is not available.
+#   This task is used to update a targets local hosts file.
+#   It's only useful for hosts that cannot use DNS resolution.
 #
-# @example How to use this plan from a command line
-#   bolt plan run common_code::hosts_update \
+# @note
+#   This task must be run for each host file entry you want 
+#   to add.
+#
+# @example How to run the task manually.
+#   bolt task run 'common_code::ruby_update_hosts' \
+#     --target testing \
 #     --modulepath ./modules \
-#     server_list='["master.test.com"]' 
-#
-# @params server_list
-#   This is an array of FQDNs
+#     ip='10.10.10.100' \
+#     fqdn='master.infra.net' 
 #
 
-plan common_code::tools::hosts_update
-(
-  ARRAY[STRING[1]] $server_list,
-)
-{
+require 'json'
 
-  # Manage name resolution via /etc/hosts
-  out::message('Updating host file name resolution.')
-  $server_list.each |$server| {
-    $output = run_command('hostname -I', $server)
+# Read in the params
+params = JSON.parse(STDIN.read)
 
-    # Get the IP for the server
-    $ip = strip($output.first['stdout'])
-    notice("IP for ${server} is ${ip}")
+hosts_file = '/etc/hosts'
 
-    run_task('nike_pe_infra::update_hosts',
-      $server_list,
-      'ip'   => $ip,
-      'fqdn' => $server,
-    )
-  }
-}
+content = File.read(hosts_file)
+output = []
+
+if content =~ (Regexp.new(Regexp.escape(params['fqdn'].split('.')[0])))
+  content.split("\n").each do |line|
+    if line =~ Regexp.new(Regexp.escape(params['fqdn'].split('.')[0]))
+      output << "#{params['ip']} #{params['fqdn']} #{params['fqdn'].split('.')[0]}"
+    else
+      output << line
+    end
+  end
+else
+  output = content.split("\n")
+  output << "#{params['ip']} #{params['fqdn']} #{params['fqdn'].split('.')[0]}"
+end
+
+test = File.new('/etc/hosts', 'w')
+test.write(output.join("\n") + "\n")
+test.close
