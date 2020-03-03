@@ -32,7 +32,7 @@ plan common_code::tools::available_language
 
   notice("Installed languages: ${results}")
 
-  # Return an array of languages available on the target host.
+  # Return an hash of languages available on the target hosts.
   return $results
 
 }
