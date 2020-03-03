@@ -33,17 +33,11 @@ plan common_code::tools::hosts_update
     $ip = strip($output.first['stdout'])
     notice("IP for ${server} is ${ip}")
 
-    # Figure out what code we can run
-    $lang = run_plan('common_code::tools::available_language',
-      'server' => $server
-    )
-    notice($lang)
-
     # Use the right tool for the right job
     #if $lang.member('ruby') {
     #  notice('Found Ruby')
       run_task('common_code::ruby_update_hosts',
-        $server_list,
+        $lang['ruby'],
         'ip'   => $ip,
         'fqdn' => $server,
       )
